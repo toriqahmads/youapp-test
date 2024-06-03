@@ -43,6 +43,9 @@ export class UpdateProfileUserDto {
   @ApiPropertyOptional()
   weight?: number;
 
+  @ApiPropertyOptional({ type: 'string', format: 'binary', required: true })
+  @IsOptional()
+  profile_picture?: Express.Multer.File;
   cover?: string;
 
   @IsString({
