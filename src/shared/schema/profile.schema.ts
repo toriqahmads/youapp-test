@@ -3,6 +3,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Gender } from '../enum/gender.enum';
 import { User } from './user.schema';
 import { IProfileEntity } from '../interface/entity/profile.entity.interface';
+import { calculateAge } from '../helpers/date/calculate.age.helper';
 
 export type ProfileDocument = Profile & Document;
 
@@ -12,12 +13,17 @@ export type ProfileDocument = Profile & Document;
   timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' },
   toJSON: {
     getters: true,
+    virtuals: true,
     transform(doc, ret) {
       if (ret._id) {
         ret.id = ret._id;
         delete ret._id;
       }
     },
+  },
+  toObject: {
+    getters: true,
+    virtuals: true,
   },
 })
 export class Profile implements IProfileEntity {
@@ -54,6 +60,11 @@ export class Profile implements IProfileEntity {
 
   @Prop()
   interests: string[];
+
+  age: number;
 }
 
 export const ProfileSchema = SchemaFactory.createForClass(Profile);
+ProfileSchema.virtual('age').get(function () {
+  return calculateAge(this.birthday);
+});

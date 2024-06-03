@@ -2,7 +2,7 @@ import { ApiPropertyOptional } from '@nestjs/swagger';
 import {
   IsDateString,
   IsIn,
-  IsNumber,
+  IsNumberString,
   IsOptional,
   IsString,
 } from 'class-validator';
@@ -33,12 +33,12 @@ export class UpdateProfileUserDto {
 
   zodiac?: string;
 
-  @IsNumber()
+  @IsNumberString()
   @IsOptional()
   @ApiPropertyOptional()
   height?: number;
 
-  @IsNumber()
+  @IsNumberString()
   @IsOptional()
   @ApiPropertyOptional()
   weight?: number;
@@ -49,8 +49,6 @@ export class UpdateProfileUserDto {
     each: true,
   })
   @IsOptional()
-  @ApiPropertyOptional({
-    isArray: true,
-  })
+  @ApiPropertyOptional()
   interests?: string[];
 }

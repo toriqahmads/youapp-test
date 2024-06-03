@@ -1,4 +1,4 @@
-import { Model, Schema } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { ISocketSessionService } from 'src/shared/interface/service/socket.session.service.interface';
@@ -29,7 +29,7 @@ export class SocketSessionService
 
   async create(
     createDto: CreateSocketSessionDto,
-  ): Promise<ISocketSessionEntity> {
+  ): Promise<SocketSessionDocument> {
     try {
       const session = await this.findByUserId(createDto.user_id);
       if (session) {
@@ -51,9 +51,9 @@ export class SocketSessionService
   }
 
   async update(
-    id: string | number | Schema.Types.ObjectId,
+    id: string | number | Types.ObjectId,
     updateDto: UpdateSocketSessionDto,
-  ): Promise<ISocketSessionEntity> {
+  ): Promise<SocketSessionDocument> {
     try {
       let session = await this.socketModel.findById(id);
       if (session) {
@@ -72,13 +72,13 @@ export class SocketSessionService
   async findAll(
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     _findAllDto: FindallSocketSessionDto,
-  ): Promise<IPagination<ISocketSessionEntity>> {
+  ): Promise<IPagination<SocketSessionDocument>> {
     throw new Error('Method not implemented.');
   }
 
   async findOne(
-    id: string | number | Schema.Types.ObjectId,
-  ): Promise<Partial<ISocketSessionEntity>> {
+    id: string | number | Types.ObjectId,
+  ): Promise<Partial<SocketSessionDocument>> {
     try {
       const session = await this.socketModel.findOne({ id });
 
@@ -90,14 +90,14 @@ export class SocketSessionService
 
   async destroy(
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _id: string | number | Schema.Types.ObjectId,
-  ): Promise<Partial<ISocketSessionEntity>> {
+    _id: string | number | Types.ObjectId,
+  ): Promise<Partial<SocketSessionDocument>> {
     throw new Error('Method not implemented.');
   }
 
   async destroyBySocketId(
     socket_id: string,
-  ): Promise<Partial<ISocketSessionEntity>> {
+  ): Promise<Partial<SocketSessionDocument>> {
     try {
       const session = await this.findBySocketId(socket_id);
       await this.socketModel.deleteOne({ socket_id });
@@ -109,10 +109,26 @@ export class SocketSessionService
   }
 
   async findByUserId(
-    user_id: string | number | Schema.Types.ObjectId,
+    user_id: string | number | Types.ObjectId,
   ): Promise<SocketSessionDocument> {
     try {
       const session = await this.socketModel.findOne({ user: user_id });
+
+      return Promise.resolve(session);
+    } catch (error) {
+      return Promise.reject(error);
+    }
+  }
+
+  async findAllByUserId(
+    user_ids: Array<Types.ObjectId>,
+  ): Promise<Array<SocketSessionDocument>> {
+    try {
+      const session = await this.socketModel.find({
+        user: {
+          $in: user_ids,
+        },
+      });
 
       return Promise.resolve(session);
     } catch (error) {

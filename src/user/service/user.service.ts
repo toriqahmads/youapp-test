@@ -10,13 +10,12 @@ import { CreateUserDto } from '../dto/create.user.dto';
 import { FindallUserDto } from '../dto/findall.user.dto';
 import { UpdateUserDto } from '../dto/update.user.dto';
 import { UpdateProfileUserDto } from '../dto/update.profile.dto';
-import { Profile } from 'src/shared/schema/profile.schema';
+import { Profile, ProfileDocument } from 'src/shared/schema/profile.schema';
 import { User, UserDocument } from 'src/shared/schema/user.schema';
 import { paginate } from 'src/shared/helpers/pagination/pagination.helper';
 import { IPagination } from 'src/shared/helpers/pagination/pagination.interface';
 import { IUserEntity } from 'src/shared/interface/entity/user.entity.interface';
 import { IUserService } from 'src/shared/interface/service/user.service.interface';
-import { IProfileEntity } from 'src/shared/interface/entity/profile.entity.interface';
 
 @Injectable()
 export class UserService
@@ -94,7 +93,7 @@ export class UserService
         }
         if (typeof filterUser[val] === 'number') {
           if (filterUser[val] !== undefined) {
-            query[val] = Number(filter[val]);
+            query[val] = Number(filterUser[val]);
           }
         }
       });
@@ -104,13 +103,48 @@ export class UserService
           $match: query,
         },
         {
+          $lookup: {
+            from: 'profiles',
+            localField: '_id',
+            foreignField: 'user',
+            as: 'profile',
+          },
+        },
+        {
+          $unwind: {
+            path: '$profile',
+            preserveNullAndEmptyArrays: true,
+          },
+        },
+        {
           $project: {
-            _id: 1,
+            _id: 0,
             id: '$_id',
             email: 1,
             username: 1,
-            createdAt: 1,
-            updatedAt: 1,
+            created_at: 1,
+            updated_at: 1,
+            profile: {
+              display_name: 1,
+              gender: 1,
+              birthday: 1,
+              horoscope: 1,
+              zodiac: 1,
+              height: 1,
+              weight: 1,
+              interests: 1,
+              age: {
+                $round: [
+                  {
+                    $divide: [
+                      { $subtract: [new Date(), '$profile.birthday'] },
+                      365.25 * 24 * 60 * 60 * 1000,
+                    ],
+                  },
+                  1,
+                ],
+              },
+            },
           },
         },
       ];
@@ -121,18 +155,19 @@ export class UserService
         .skip((pageQuery - 1) * limitQuery)
         .exec();
 
-      if (!users || users.length < 1) {
-        throw new NotFoundException(`no user record`);
-      }
+      let total_data = 0;
+      if (users && users.length) {
+        const total = await this.userModel
+          .aggregate(aggregateQuery)
+          .count('id')
+          .exec();
 
-      const total_data = await this.userModel
-        .aggregate(aggregateQuery)
-        .count('id')
-        .exec();
+        total_data = total[0].id;
+      }
 
       const result = paginate<UserDocument>(
         users,
-        total_data[0].id,
+        total_data,
         pageQuery,
         limitQuery,
       );
@@ -152,13 +187,48 @@ export class UserService
           },
         },
         {
+          $lookup: {
+            from: 'profiles',
+            localField: '_id',
+            foreignField: 'user',
+            as: 'profile',
+          },
+        },
+        {
+          $unwind: {
+            path: '$profile',
+            preserveNullAndEmptyArrays: true,
+          },
+        },
+        {
           $project: {
-            _id: 1,
+            _id: 0,
             id: '$_id',
             email: 1,
             username: 1,
-            createdAt: 1,
-            updatedAt: 1,
+            created_at: 1,
+            updated_at: 1,
+            profile: {
+              display_name: 1,
+              gender: 1,
+              birthday: 1,
+              horoscope: 1,
+              zodiac: 1,
+              height: 1,
+              weight: 1,
+              interests: 1,
+              age: {
+                $round: [
+                  {
+                    $divide: [
+                      { $subtract: [new Date(), '$profile.birthday'] },
+                      365.25 * 24 * 60 * 60 * 1000,
+                    ],
+                  },
+                  1,
+                ],
+              },
+            },
           },
         },
       ];
@@ -177,10 +247,6 @@ export class UserService
   async findOne(id: string): Promise<UserDocument> {
     try {
       const user = await this.userModel.findById(id);
-      if (!user) {
-        throw new NotFoundException(`user with id ${id} not found`);
-      }
-
       return Promise.resolve(user);
     } catch (error) {
       return Promise.reject(error);
@@ -282,7 +348,7 @@ export class UserService
   async upsertProfile(
     id: string,
     updateProfileUserDto: UpdateProfileUserDto,
-  ): Promise<IProfileEntity> {
+  ): Promise<ProfileDocument> {
     try {
       const user = await this.userModel.findById(id);
       if (!user) {
@@ -308,7 +374,6 @@ export class UserService
 
       return Promise.resolve(result);
     } catch (error) {
-      console.log(error);
       return Promise.reject(error);
     }
   }

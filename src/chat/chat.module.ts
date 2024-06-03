@@ -14,6 +14,10 @@ import {
   SocketSession,
   SocketSessionSchema,
 } from 'src/shared/schema/socket.session.schema';
+import { ChatController } from './controller/chat.controller';
+import { ChatService } from './service/chat.service';
+import { MessageController } from './controller/message.controller';
+import { MessageService } from './service/message.service';
 
 @Module({
   imports: [
@@ -48,8 +52,8 @@ import {
       },
     ]),
   ],
-  controllers: [],
-  providers: [ChatGateway, SocketSessionService],
-  exports: [],
+  controllers: [ChatController, MessageController],
+  providers: [ChatGateway, SocketSessionService, ChatService, MessageService],
+  exports: [SocketSessionService, ChatService, MessageService],
 })
 export class ChatModule {}

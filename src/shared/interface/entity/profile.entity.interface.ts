@@ -13,4 +13,5 @@ export interface IProfileEntity extends IBaseEntity {
   weight: number;
   cover: string;
   interests: string[];
+  age?: number;
 }

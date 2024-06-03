@@ -8,12 +8,18 @@ export interface IReadMessage {
   time: Date;
 }
 
+export interface IDeliveredMessage {
+  by: Partial<IUserEntity>;
+  time: Date;
+}
+
 export interface IMessageEntity extends IBaseEntity {
   sender: Partial<IUserEntity>;
   chat: Partial<IChatEntity>;
   body: string;
   type: MessageType;
+  reply_for_message?: Partial<IMessageEntity>;
   attachments?: Array<string>;
-  delivered_at?: Date;
+  delivereds?: Array<IDeliveredMessage>;
   reads?: Array<IReadMessage>;
 }

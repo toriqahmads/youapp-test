@@ -111,9 +111,7 @@ export class AuthService implements IAuthService<IAuthEntity> {
         throw new UnauthorizedException(`refresh token has been revoked`);
       }
 
-      const user = await this.userService.findByIdWithFullDetail(
-        validateRefresToken.id,
-      );
+      const user = await this.userService.findOne(validateRefresToken.id);
       const login = await this.login(user);
 
       return Promise.resolve(login);

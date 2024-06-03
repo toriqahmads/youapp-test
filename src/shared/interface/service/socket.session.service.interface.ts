@@ -1,4 +1,4 @@
-import { Schema } from 'mongoose';
+import { Types } from 'mongoose';
 import { IBaseService } from './base.service.interface';
 
 export interface ISocketSessionService<
@@ -12,9 +12,10 @@ export interface ISocketSessionService<
     UpdateEntityDto,
     FindAllEntityDto
   > {
-  findByUserId(
-    user_id: string | number | Schema.Types.ObjectId,
-  ): Promise<Entity>;
+  findByUserId(user_id: string | number | Types.ObjectId): Promise<Entity>;
   findBySocketId(socket_id: string): Promise<Entity>;
   destroyBySocketId(socket_id: string): Promise<Partial<Entity>>;
+  findAllByUserId(
+    user_ids: Array<string | number | Types.ObjectId>,
+  ): Promise<Array<Entity>>;
 }

@@ -10,6 +10,18 @@ export type ChatDocument = Chat & Document;
   versionKey: false,
   autoIndex: true,
   timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' },
+  toJSON: {
+    getters: true,
+    virtuals: true,
+    transform(doc, ret) {
+      if (ret._id) {
+        ret.id = ret._id;
+        delete ret._id;
+      }
+
+      delete ret.password;
+    },
+  },
 })
 export class Chat implements IChatEntity {
   @Prop([
@@ -20,8 +32,11 @@ export class Chat implements IChatEntity {
   ])
   participants?: Partial<IUserEntity>[];
 
-  @Prop()
+  @Prop({ default: null })
   chat_name?: string;
+
+  @Prop({ default: null })
+  recipient_id: string;
 
   @Prop({ default: false })
   is_group: boolean;

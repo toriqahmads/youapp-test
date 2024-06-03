@@ -10,6 +10,7 @@ export type UserDocument = User & Document;
   timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' },
   toJSON: {
     getters: true,
+    virtuals: true,
     transform(doc, ret) {
       if (ret._id) {
         ret.id = ret._id;
