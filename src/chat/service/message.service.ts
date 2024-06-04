@@ -196,14 +196,14 @@ export class MessageService
         },
       ];
 
-      const chats = await this.messageModel
+      const messages = await this.messageModel
         .aggregate(aggregateQuery)
         .limit(limitQuery * 1)
         .skip((pageQuery - 1) * limitQuery)
         .exec();
 
       let total_data = 0;
-      if (chats && chats.length) {
+      if (messages && messages.length) {
         const total = await this.messageModel
           .aggregate(aggregateQuery)
           .count('id')
@@ -213,7 +213,7 @@ export class MessageService
       }
 
       const result = paginate<MessageDocument>(
-        chats,
+        messages,
         total_data,
         pageQuery,
         limitQuery,

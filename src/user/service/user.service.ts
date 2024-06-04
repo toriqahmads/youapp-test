@@ -16,6 +16,8 @@ import { paginate } from 'src/shared/helpers/pagination/pagination.helper';
 import { IPagination } from 'src/shared/helpers/pagination/pagination.interface';
 import { IUserEntity } from 'src/shared/interface/entity/user.entity.interface';
 import { IUserService } from 'src/shared/interface/service/user.service.interface';
+import { calculateHoroscope } from 'src/shared/helpers/date/calculate.horoscope.helper';
+import { calculateZodiac } from 'src/shared/helpers/date/calculate.zodiac.helper';
 
 @Injectable()
 export class UserService
@@ -355,11 +357,32 @@ export class UserService
         throw new NotFoundException(`user with id ${id} not found`);
       }
 
-      const isProfileExist = await this.profileModel.countDocuments({
+      if (updateProfileUserDto.birthday) {
+        updateProfileUserDto.horoscope = calculateHoroscope(
+          updateProfileUserDto.birthday,
+        );
+        updateProfileUserDto.zodiac = calculateZodiac(
+          updateProfileUserDto.birthday,
+        );
+      }
+
+      const isProfileExist = await this.profileModel.findOne({
         user: user.id,
       });
 
       if (isProfileExist) {
+        if (!updateProfileUserDto.birthday && isProfileExist.birthday) {
+          updateProfileUserDto.birthday = isProfileExist.birthday;
+        }
+
+        updateProfileUserDto.horoscope = calculateHoroscope(
+          updateProfileUserDto.birthday,
+        );
+
+        updateProfileUserDto.zodiac = calculateZodiac(
+          updateProfileUserDto.birthday,
+        );
+
         await this.profileModel.updateOne(
           {
             user: user.id,

@@ -225,18 +225,19 @@ export class ChatService
         .skip((pageQuery - 1) * limitQuery)
         .exec();
 
-      if (!chats || chats.length < 1) {
-        throw new NotFoundException(`no chat record`);
-      }
+      let total_data = 0;
+      if (chats && chats.length) {
+        const total = await this.chatModel
+          .aggregate(aggregateQuery)
+          .count('id')
+          .exec();
 
-      const total_data = await this.chatModel
-        .aggregate(aggregateQuery)
-        .count('id')
-        .exec();
+        total_data = total[0].id;
+      }
 
       const result = paginate<ChatDocument>(
         chats,
-        total_data[0].id,
+        total_data,
         pageQuery,
         limitQuery,
       );

@@ -75,13 +75,11 @@ export class AuthService implements IAuthService<IAuthEntity> {
 
         if (auth.user) userDocument = auth.user;
       } else {
-        const authsave = new this.authModel({
+        await this.authModel.create({
           user: user._id,
           access_token,
           refresh_token,
         });
-
-        await authsave.save();
         userDocument = await this.userService.findByIdWithFullDetail(user.id);
       }
 

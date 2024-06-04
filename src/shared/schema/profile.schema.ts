@@ -43,10 +43,10 @@ export class Profile implements IProfileEntity {
   @Prop()
   birthday: Date;
 
-  @Prop()
+  @Prop({ default: null })
   horoscope: string;
 
-  @Prop()
+  @Prop({ default: null })
   zodiac: string;
 
   @Prop()

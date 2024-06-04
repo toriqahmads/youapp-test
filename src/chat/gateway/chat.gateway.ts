@@ -29,6 +29,7 @@ import { WebsocketExceptionsFilter } from 'src/shared/exception.filter/websocket
 import { SendMessageDto } from '../dto/chat/send.message.dto';
 import { ChatService } from '../service/chat.service';
 import { MessageService } from '../service/message.service';
+import { WebsocketUpdateMessageDto } from '../dto/message/websocket.update.message.dto';
 
 @WebSocketGateway({
   cors: {
@@ -154,6 +155,33 @@ export class ChatGateway
         sendMessage.message.id,
         uniqueClient.user_id.map((u) => new Types.ObjectId(u)),
       );
+
+      return Promise.resolve(true);
+    } catch (err) {
+      return Promise.reject(err);
+    }
+  }
+
+  @SubscribeMessage('update_message')
+  async handleUpdateMessage(
+    @MessageBody() message: WebsocketUpdateMessageDto,
+    @ConnectedSocket() client: SocketIO,
+  ): Promise<boolean> {
+    try {
+      this.logger.log(
+        `Update message request received from client id: ${client.id}`,
+      );
+      this.logger.debug(`Payload: ${message}`);
+
+      const { message_id, ...updateMessageDto } = message;
+      const updatedMessage = await this.messageService.update(
+        message_id,
+        updateMessageDto,
+      );
+
+      client
+        .to(updatedMessage.chat as string)
+        .emit('message_updated', updatedMessage);
 
       return Promise.resolve(true);
     } catch (err) {
