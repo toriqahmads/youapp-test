@@ -16,6 +16,7 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
+    "test:cov:report": "jest --coverageReporters='json-summary'",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
@@ -94,11 +95,7 @@
     "coverageDirectory": "../coverage",
     "testEnvironment": "node",
     "moduleNameMapper": {
-      "@src/(.*)": "<rootDir>/$1",
-      "@modules/(.*)": "<rootDir>/modules/$1",
-      "@config/(.*)": "<rootDir>/configs/$1",
-      "@libs/(.*)": "<rootDir>/libs/$1",
-      "@tests/(.*)": "<rootDir>/tests/$1"
+      "^src/(.*)": "<rootDir>/$1"
     },
     "coverageThreshold": {
       "global": {

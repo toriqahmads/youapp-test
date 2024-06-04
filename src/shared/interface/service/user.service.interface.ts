@@ -1,4 +1,4 @@
-import { UpdateProfileUserDto } from 'src/user/dto/update.profile.dto';
+import { UpsertProfileUserDto } from 'src/user/dto/upsert.profile.dto';
 import { IBaseService } from './base.service.interface';
 import { IProfileEntity } from '../entity/profile.entity.interface';
 
@@ -15,7 +15,7 @@ export interface IUserService<
   > {
   upsertProfile(
     id: string,
-    updateProfileUserDto: UpdateProfileUserDto,
+    usertProfileUserDto: UpsertProfileUserDto,
   ): Promise<IProfileEntity>;
   findByUsernameOrEmail(username_or_email: string): Promise<Entity>;
   findByEmail(email: string): Promise<Entity>;

@@ -14,7 +14,7 @@ import {
 import { UserService } from '../service/user.service';
 import { CreateUserDto } from '../dto/create.user.dto';
 import { UpdateUserDto } from '../dto/update.user.dto';
-import { UpdateProfileUserDto } from '../dto/update.profile.dto';
+import { UpsertProfileUserDto } from '../dto/upsert.profile.dto';
 import {
   ApiBearerAuth,
   ApiConsumes,
@@ -73,15 +73,15 @@ export class UserController {
       fileFilter: imageFileFilter,
     }),
   )
-  updateProfile(
+  upsertProfile(
     @Request() req,
-    @Body() updateProfileUserDto: UpdateProfileUserDto,
+    @Body() upsertProfileUserDto: UpsertProfileUserDto,
     @UploadedFile() profile_picture?: Express.Multer.File,
   ) {
     if (profile_picture) {
-      updateProfileUserDto.cover = `/profile_picture/${profile_picture.filename}`;
+      upsertProfileUserDto.cover = `/profile_picture/${profile_picture.filename}`;
     }
-    return this.userService.upsertProfile(req.user.id, updateProfileUserDto);
+    return this.userService.upsertProfile(req.user.id, upsertProfileUserDto);
   }
 
   @Patch(':id')

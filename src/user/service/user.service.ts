@@ -9,9 +9,9 @@ import mongoose, { Model, PipelineStage } from 'mongoose';
 import { CreateUserDto } from '../dto/create.user.dto';
 import { FindallUserDto } from '../dto/findall.user.dto';
 import { UpdateUserDto } from '../dto/update.user.dto';
-import { UpdateProfileUserDto } from '../dto/update.profile.dto';
-import { Profile, ProfileDocument } from 'src/shared/schema/profile.schema';
+import { UpsertProfileUserDto } from '../dto/upsert.profile.dto';
 import { User, UserDocument } from 'src/shared/schema/user.schema';
+import { Profile, ProfileDocument } from 'src/shared/schema/profile.schema';
 import { paginate } from 'src/shared/helpers/pagination/pagination.helper';
 import { IPagination } from 'src/shared/helpers/pagination/pagination.interface';
 import { IUserEntity } from 'src/shared/interface/entity/user.entity.interface';
@@ -51,7 +51,6 @@ export class UserService
 
       return Promise.resolve(user);
     } catch (error) {
-      console.log(error);
       return Promise.reject(error);
     }
   }
@@ -91,11 +90,6 @@ export class UserService
               $regex: new RegExp(filterUser[val]),
               $options: 'i',
             };
-          }
-        }
-        if (typeof filterUser[val] === 'number') {
-          if (filterUser[val] !== undefined) {
-            query[val] = Number(filterUser[val]);
           }
         }
       });
@@ -309,9 +303,7 @@ export class UserService
       if (username && username !== '' && username !== user.username) {
         const isDuplicate = await this.isUsernameDuplicate(username);
         if (isDuplicate) {
-          throw new ConflictException(
-            `username ${username} already registered`,
-          );
+          throw new ConflictException(`username ${username} already taken`);
         }
 
         user.username = username;
@@ -321,11 +313,8 @@ export class UserService
       }
 
       await user.save();
-      const result = await this.findOne(id);
-
-      return Promise.resolve(result);
+      return Promise.resolve(user);
     } catch (error) {
-      console.log(error);
       return Promise.reject(error);
     }
   }
@@ -338,18 +327,16 @@ export class UserService
       }
 
       await user.deleteOne();
-      const result = await this.findOne(id);
 
-      return Promise.resolve(result);
+      return Promise.resolve(user);
     } catch (error) {
-      console.log(error);
       return Promise.reject(error);
     }
   }
 
   async upsertProfile(
     id: string,
-    updateProfileUserDto: UpdateProfileUserDto,
+    upsertProfileUserDto: UpsertProfileUserDto,
   ): Promise<ProfileDocument> {
     try {
       const user = await this.userModel.findById(id);
@@ -357,12 +344,12 @@ export class UserService
         throw new NotFoundException(`user with id ${id} not found`);
       }
 
-      if (updateProfileUserDto.birthday) {
-        updateProfileUserDto.horoscope = calculateHoroscope(
-          updateProfileUserDto.birthday,
+      if (upsertProfileUserDto.birthday) {
+        upsertProfileUserDto.horoscope = calculateHoroscope(
+          upsertProfileUserDto.birthday,
         );
-        updateProfileUserDto.zodiac = calculateZodiac(
-          updateProfileUserDto.birthday,
+        upsertProfileUserDto.zodiac = calculateZodiac(
+          upsertProfileUserDto.birthday,
         );
       }
 
@@ -371,26 +358,26 @@ export class UserService
       });
 
       if (isProfileExist) {
-        if (!updateProfileUserDto.birthday && isProfileExist.birthday) {
-          updateProfileUserDto.birthday = isProfileExist.birthday;
+        if (!upsertProfileUserDto.birthday && isProfileExist.birthday) {
+          upsertProfileUserDto.birthday = isProfileExist.birthday;
         }
 
-        updateProfileUserDto.horoscope = calculateHoroscope(
-          updateProfileUserDto.birthday,
+        upsertProfileUserDto.horoscope = calculateHoroscope(
+          upsertProfileUserDto.birthday,
         );
 
-        updateProfileUserDto.zodiac = calculateZodiac(
-          updateProfileUserDto.birthday,
+        upsertProfileUserDto.zodiac = calculateZodiac(
+          upsertProfileUserDto.birthday,
         );
 
         await this.profileModel.updateOne(
           {
             user: user.id,
           },
-          updateProfileUserDto,
+          upsertProfileUserDto,
         );
       } else {
-        await this.profileModel.create({ ...updateProfileUserDto, user });
+        await this.profileModel.create({ ...upsertProfileUserDto, user });
       }
 
       const result = await this.profileModel.findOne({ user: user.id });
