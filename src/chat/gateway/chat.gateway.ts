@@ -25,7 +25,7 @@ import { WebsocketJwtAuthGuard } from 'src/shared/guard/websocket-jwt-auth.guard
 import { JoinChatRoomDto } from '../dto/chat/join.chat.room.dto';
 import { WebsocketAuthenticationMiddleware } from 'src/shared/middleware/websocket/websocket.authentication.middleware';
 import { WebsocketValidationPipe } from 'src/shared/validation.pipe/websocket.validation.pipe';
-import { WebsocketExceptionsFilter } from 'src/shared/exception.filter/websocket.exception.filter';
+import { WebsocketExceptionsFilter } from 'src/shared/filter/websocket.exception.filter';
 import { SendMessageDto } from '../dto/chat/send.message.dto';
 import { ChatService } from '../service/chat.service';
 import { MessageService } from '../service/message.service';

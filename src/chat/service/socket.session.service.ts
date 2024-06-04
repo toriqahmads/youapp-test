@@ -80,7 +80,7 @@ export class SocketSessionService
     id: string | number | Types.ObjectId,
   ): Promise<Partial<SocketSessionDocument>> {
     try {
-      const session = await this.socketModel.findOne({ id });
+      const session = await this.socketModel.findById(id);
 
       return Promise.resolve(session);
     } catch (error) {
