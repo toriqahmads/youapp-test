@@ -88,6 +88,7 @@
       "interfaces",
       "jestGlobalMocks.ts",
       ".module.ts",
+      ".contatns.ts",
       "<rootDir>/main.ts",
       "<rootDir>/shared/schema",
       ".mock.ts"
