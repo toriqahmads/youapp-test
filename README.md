@@ -61,15 +61,16 @@ Application started and listen at http://localhost:4000
 ### HTTP REST API
 
 You can visit http://localhost:4000/api-docs for complete API Documentation (Swagger)
+<br>`Cover image uploaded in create/update profile can accessed in /banner/${imagename}`
 
  1. Register
-    METHOD: `POST`
-	  URL: `/api/register`
-    HEADER:
+    - METHOD: `POST`
+    - URL: `/api/register`
+    - HEADER:
     ```
     Content-Type: application/json
     ```
-	  BODY: 
+    - BODY: 
     ```json
     {
       "email": "youapp@youapp.com",
@@ -77,7 +78,7 @@ You can visit http://localhost:4000/api-docs for complete API Documentation (Swa
       "password": "string"
     }
     ```
-    RESPONSE:
+    - RESPONSE:
     ```json
     {
       "code": 201,
@@ -93,20 +94,20 @@ You can visit http://localhost:4000/api-docs for complete API Documentation (Swa
     }
     ```
  2. Login
-    METHOD: `POST`
-    URL: `/api/login`
-    HEADER: 
+    - METHOD: `POST`
+    - URL: `/api/login`
+    - HEADER: 
     ```
     Content-Type: application/json
     ```
-    BODY:
+    - BODY:
     ```json
     {
       "username_or_email": "youapp",
       "password": "string"
     }
     ```
-    RESPONSE:
+    - RESPONSE:
     ```json
     {
       "code": 201,
@@ -129,14 +130,15 @@ You can visit http://localhost:4000/api-docs for complete API Documentation (Swa
     }
     ```
  3. Create Profile
-    METHOD: `POST`
-    URL: `/api/createProfile`
-    HEADER:
+    - NOTE: Age, Zodiac, Horoscope will calculated automatically if birthday filled
+    - METHOD: `POST`
+    - URL: `/api/createProfile`
+    - HEADER:
     ```
     Authorization: Bearer ${token}
     Content-Type: multipart/form-data
     ```
-    BODY:
+    - BODY:
     ```
     'display_name=You App' \
     'birthday=1997-06-02' \
@@ -146,7 +148,7 @@ You can visit http://localhost:4000/api-docs for complete API Documentation (Swa
     'banner=@Landscape-Photography-steps.jpg;type=image/jpeg' \
     'interests=programming,gaming'
     ```
-    RESPONSE:
+    - RESPONSE:
     ```json
     {
       "code": 201,
@@ -174,14 +176,14 @@ You can visit http://localhost:4000/api-docs for complete API Documentation (Swa
     }
     ```
  4. Get Profile
-    METHOD: `GET`
-    URL: `/api/getProfile`
-    HEADER: 
+    - METHOD: `GET`
+    - URL: `/api/getProfile`
+    - HEADER: 
     ```
     Authorization: Bearer ${token}
     Content-Type: application/json
     ```
-    RESPONSE:
+    - RESPONSE:
     ```json
     {
       "code": 200,
@@ -211,14 +213,15 @@ You can visit http://localhost:4000/api-docs for complete API Documentation (Swa
     }
     ```
  5. Update Profile
-    METHOD: `PUT`
-    URL: `/api/updateProfile`
-    HEADER:
+    - NOTE: Age, Zodiac, Horoscope will calculated automatically if birthday filled
+    - METHOD: `PUT`
+    - URL: `/api/updateProfile`
+    - HEADER:
     ```
     Authorization: Bearer ${token}
     Content-Type: multipart/form-data
     ```
-    BODY:
+    - BODY:
     ```
     'display_name=You App' \
     'birthday=1997-06-02' \
@@ -228,7 +231,7 @@ You can visit http://localhost:4000/api-docs for complete API Documentation (Swa
     'banner=@Landscape-Photography-steps.jpg;type=image/jpeg' \
     'interests=programming,gaming'
     ```
-    RESPONSE:
+    - RESPONSE:
     ```json
     {
       "code": 200,
@@ -256,13 +259,13 @@ You can visit http://localhost:4000/api-docs for complete API Documentation (Swa
     }
     ```
  6. View Messages
-    METHOD: `GET`
-    URL: `/api/viewMessages`
-    HEADER:
+    - METHOD: `GET`
+    - URL: `/api/viewMessages`
+    - HEADER:
     ```
     Authorization: Bearer ${token}
     ```
-    QUERY:
+    - QUERY:
     ```
     page: number (optional)
     limit: number (optional)
@@ -270,7 +273,7 @@ You can visit http://localhost:4000/api-docs for complete API Documentation (Swa
     from: string (optional) ID of sender
     message: string (optional) filtering message containing a keyword
     ```
-    RESPONSE:
+    - RESPONSE:
     ```json
     {
       "code": 200,
@@ -374,14 +377,14 @@ You can visit http://localhost:4000/api-docs for complete API Documentation (Swa
     ```
 
  7. Send Messages
-    METHOD: `POST`
-    URL: `/api/sendMessage`
-    HEADER:
+    - METHOD: `POST`
+    - URL: `/api/sendMessage`
+    - HEADER:
     ```
     Authorization: Bearer ${token}
     Content-Type: application/json
     ```
-    BODY:
+    - BODY:
     ```json
     {
       "body": "test message",
@@ -393,7 +396,7 @@ You can visit http://localhost:4000/api-docs for complete API Documentation (Swa
       "recipient": "665ad6de39eaf3baf42579c1"
     }
     ```
-    RESPONSE:
+    - RESPONSE:
     ```json
     {
       "code": 201,
@@ -431,13 +434,13 @@ You can visit http://localhost:4000/api-docs for complete API Documentation (Swa
     }
     ```
 8. View Chats
-    METHOD: `GET`
-    URL: `/api/viewChats`
-    HEADER:
+   - METHOD: `GET`
+   - URL: `/api/viewChats`
+   - HEADER:
     ```
     Authorization: Bearer ${token}
     ```
-    QUERY:
+   - QUERY:
     ```
     page: number (optional)
     limit: number (optional)
@@ -445,7 +448,7 @@ You can visit http://localhost:4000/api-docs for complete API Documentation (Swa
     chat_name: string (optional) Name of chat room
     is_group: boolean string (optional) chat is group or personal
     ```
-    RESPONSE:
+   - RESPONSE:
     ```json
     {
       "code": 200,
