@@ -478,3 +478,120 @@ You can visit http://localhost:4000/api-docs for complete API Documentation (Swa
       }
     }
     ```
+
+### WEBSOCKET API
+This websocket is using SocketIO Protocol
+
+#### CONNECT
+- URL: `${host}` example: `http://localhost:4000`
+- HEADER:
+```
+Authorization: Bearer ${token}
+```
+
+#### EVENT EMIT
+1. Ping
+   - EVENT NAME: `ping`
+   - BODY:
+     ```
+     ping
+     ```
+   - RESPONSE:
+     ```
+     pong
+     ```
+     
+2. Join Chat Room
+   - EVENT NAME: `join_chat_room`
+   - BODY:
+     ```json
+     {
+         "chat_id": "66608692f56f13cbd62a394b"
+     }
+     ```
+   - RESPONSE:
+     `true`
+    
+3. Send Message
+   - EVENT NAME: `send_message`
+   - BODY:
+     ```json
+     {
+       "body": "test message",
+       "type": "text",
+       "attachments": [
+         "http://attachment.com/a"
+       ],
+       "reply_for_message": "66608692f56f13cbd62a394d",
+       "recipient": "665ad6de39eaf3baf42579c1"
+     }
+     ```
+   - RESPONSE:
+    `true`
+    
+4. Update Message
+   - EVENT NAME: `update_message`
+   - BODY:
+    ```json
+    {
+        "message_id": "66608efb807954629916d793",
+        "body": "test message",
+        "type": "markdown",
+        "attachments": [
+            "http://attachment.com/a"
+        ]
+    }
+    ```
+   - RESPONSE:
+    `true`
+
+5. Read Message
+   - EVENT NAME: `read_message`
+   - BODY:
+     ```
+     66608efb807954629916d793     
+     ```
+   - RESPONSE:
+     `true`
+
+#### EVENT LISTEN
+1. Receive Message
+   - EVENT NAME: `receive_message`
+   - RESPONSE:
+     ```json
+     {
+         "sender": "666082178f0dc0289074a554",
+         "chat": "66608692f56f13cbd62a394b",
+         "body": "test message",
+         "type": "text",
+         "reply_for_message": "66608692f56f13cbd62a394d",
+         "attachments": [
+             "http://attachment.com/a"
+         ],
+         "delivereds": [],
+         "reads": [],
+         "created_at": "2024-06-05T16:14:51.729Z",
+         "updated_at": "2024-06-05T16:14:51.729Z",
+         "id": "66608efb807954629916d793"
+     }
+     ```
+2. Update Message
+   - EVENT NAME: `updated_message`
+   - RESPONSE:
+     ```json
+     {
+         "sender": "666082178f0dc0289074a554",
+         "chat": "66608692f56f13cbd62a394b",
+         "body": "test message",
+         "type": "text",
+         "reply_for_message": "66608692f56f13cbd62a394d",
+         "attachments": [
+             "http://attachment.com/a"
+         ],
+         "delivereds": [],
+         "reads": [],
+         "created_at": "2024-06-05T16:14:51.729Z",
+         "updated_at": "2024-06-05T16:14:51.729Z",
+         "id": "66608efb807954629916d793"
+     }
+     ```
