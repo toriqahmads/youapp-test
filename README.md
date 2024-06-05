@@ -1,7 +1,7 @@
 ## Description
 
 This is a project for technical test at YouApp.
-Build with [Nest](https://github.com/nestjs/nest), [MongoDB](https://www.mongodb.com) [SocketIO] (https://socket.io)
+Build with [Nest](https://github.com/nestjs/nest), [MongoDB](https://www.mongodb.com) [SocketIO](https://socket.io)
 Served with [Docket](https://www.docker.com/)
 
 ## Installation
