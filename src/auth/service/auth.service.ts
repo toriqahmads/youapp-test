@@ -1,4 +1,4 @@
-import { compare, hash } from 'bcrypt';
+import { compare } from 'bcrypt';
 import { Model } from 'mongoose';
 import {
   forwardRef,
@@ -139,7 +139,7 @@ export class AuthService implements IAuthService<IAuthEntity> {
       const user = await this.userService.create({
         email: registerDto.email,
         username: registerDto.username,
-        password: await hash(registerDto.password, 10),
+        password: registerDto.password,
       });
 
       return Promise.resolve(user);

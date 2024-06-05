@@ -1,4 +1,5 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
+import { Transform } from 'class-transformer';
 import {
   IsDateString,
   IsIn,
@@ -45,11 +46,20 @@ export class UpsertProfileUserDto {
 
   @ApiPropertyOptional({ type: 'string', format: 'binary', required: true })
   @IsOptional()
-  profile_picture?: Express.Multer.File;
+  banner?: Express.Multer.File;
   cover?: string;
 
   @IsString({
     each: true,
+  })
+  @Transform(({ value }) => {
+    if (!Array.isArray(value)) {
+      return String(value)
+        .split(',')
+        .map((v: string) => v.trim());
+    } else {
+      return value;
+    }
   })
   @IsOptional()
   @ApiPropertyOptional()

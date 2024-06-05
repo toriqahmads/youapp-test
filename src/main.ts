@@ -13,7 +13,7 @@ async function bootstrap() {
 
   const configService: ConfigService = app.get(ConfigService);
   app.use(helmet());
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(new ValidationPipe({ transform: true }));
   app.useLogger(
     configService.get<string>('NODE_ENV') === 'prod' &&
       configService.get<boolean>('DEBUG', false) === false
@@ -26,6 +26,7 @@ async function bootstrap() {
     preflightContinue: false,
     optionsSuccessStatus: 204,
   });
+  app.setGlobalPrefix('api');
   app.enableVersioning({
     type: VersioningType.URI,
   });

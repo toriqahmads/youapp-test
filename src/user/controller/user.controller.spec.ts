@@ -236,13 +236,13 @@ describe('UserController Testing', () => {
         upsertProfile.gender = Gender.FEMALE;
         jest.spyOn(mockUserService, 'upsertProfile').mockResolvedValueOnce({
           ...TestCase.positive.upsertProfile.expected,
-          cover: `/profile_picture/${filename}`,
+          cover: `/banner/${filename}`,
           gender: Gender.FEMALE,
         });
 
         const user = await userController.upsertProfile(req, upsertProfile, {
           filename,
-          fieldname: 'profile_picture',
+          fieldname: 'banner',
           originalname: '',
           encoding: '',
           mimetype: '',
@@ -261,7 +261,7 @@ describe('UserController Testing', () => {
         expect(user.zodiac).toBe(
           TestCase.positive.upsertProfile.expected.zodiac,
         );
-        expect(user.cover).toBe(`/profile_picture/${filename}`);
+        expect(user.cover).toBe(`/banner/${filename}`);
       });
     });
   });

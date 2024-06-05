@@ -59,12 +59,12 @@ export class UserController {
   }
 
   @ApiConsumes('multipart/form-data')
-  @Patch('/profile')
+  @Post('/profile')
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(
-    FileInterceptor('profile_picture', {
+    FileInterceptor('banner', {
       storage: diskStorage({
-        destination: './public/profile_picture',
+        destination: './public/banner',
         filename: editFileName,
       }),
       limits: {
@@ -76,10 +76,10 @@ export class UserController {
   upsertProfile(
     @Request() req,
     @Body() upsertProfileUserDto: UpsertProfileUserDto,
-    @UploadedFile() profile_picture?: Express.Multer.File,
+    @UploadedFile() banner?: Express.Multer.File,
   ) {
-    if (profile_picture) {
-      upsertProfileUserDto.cover = `/profile_picture/${profile_picture.filename}`;
+    if (banner) {
+      upsertProfileUserDto.cover = `/banner/${banner.filename}`;
     }
     return this.userService.upsertProfile(req.user.id, upsertProfileUserDto);
   }
