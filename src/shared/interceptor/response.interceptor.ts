@@ -33,7 +33,10 @@ export class ResponseInterceptor<T> implements NestInterceptor<T, Response<T>> {
         return {
           code: context.switchToHttp().getResponse().statusCode,
           success: true,
-          message: data?.message || 'success',
+          message:
+            data?.message && typeof data?.message !== 'string'
+              ? 'success'
+              : data.message,
           data,
         };
       }),

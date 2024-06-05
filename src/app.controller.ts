@@ -130,14 +130,14 @@ export class AppController {
   }
 
   @ApiBearerAuth()
-  @Get('viewChat')
+  @Get('viewChats')
   @UseGuards(JwtAuthGuard)
   viewChats(@Query() filter: FindallChatDto, @Request() req) {
     return this.chatService.findMyChats(filter, req.user.id);
   }
 
   @ApiBearerAuth()
-  @Get('viewMessage')
+  @Get('viewMessages')
   @UseGuards(JwtAuthGuard)
   viewMessages(@Query() filter: FindallMessageDto, @Request() req) {
     return this.messageService.findMyMessages(filter, req.user.id);

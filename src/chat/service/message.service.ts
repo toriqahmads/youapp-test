@@ -154,6 +154,9 @@ export class MessageService
       if (filterMessage.chat_id) {
         query['chat'] = new Types.ObjectId(filterMessage.chat_id);
       }
+      if (filterMessage.from) {
+        query['sender'] = new Types.ObjectId(filterMessage.from);
+      }
 
       const aggregateQuery: PipelineStage[] = [
         {
@@ -187,6 +190,17 @@ export class MessageService
             body: 1,
             type: 1,
             attatchments: 1,
+            reply_for_message: 1,
+            sender: 1,
+            delivereds: 1,
+            reads: 1,
+            chat: {
+              id: '$_id',
+              chat_name: 1,
+              participants: 1,
+              recipient_id: 1,
+              is_group: 1,
+            },
             created_at: 1,
             updated_at: 1,
           },
