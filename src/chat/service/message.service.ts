@@ -1,7 +1,6 @@
 import { Model, PipelineStage, Types } from 'mongoose';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Chat } from 'src/shared/schema/chat.schema';
 import { IPagination } from 'src/shared/helpers/pagination/pagination.interface';
 import { paginate } from 'src/shared/helpers/pagination/pagination.helper';
 import { IMessageService } from 'src/shared/interface/service/message.service.interface';
@@ -23,8 +22,6 @@ export class MessageService
     >
 {
   constructor(
-    @InjectModel(Chat.name)
-    private readonly chatModel: Model<Chat>,
     @InjectModel(Message.name)
     private readonly messageModel: Model<Message>,
   ) {}
@@ -221,7 +218,6 @@ export class MessageService
 
       return Promise.resolve(result);
     } catch (err) {
-      console.log(err);
       return Promise.reject(err);
     }
   }
