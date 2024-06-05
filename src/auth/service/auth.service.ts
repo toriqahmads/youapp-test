@@ -40,8 +40,9 @@ export class AuthService implements IAuthService<IAuthEntity> {
         `user with username or email ${username_or_email} is not exist`,
       );
     }
+
     if (user && user.password) {
-      if (await compare(password, user.password)) {
+      if (!(await compare(password, user.password))) {
         throw new UnauthorizedException(`invalid password`);
       }
 

@@ -630,40 +630,40 @@ describe('Chat Testing', () => {
         expect(err).toEqual(error);
       }
     });
-  });
 
-  describe('sendMessage', () => {
-    it('should sendMessage throw error', async () => {
-      const error = new Error(`user not found`);
-      const createChat: SendMessageDto = new SendMessageDto();
-      Object.assign(createChat, {
-        ...TestCase.positive.create.input,
-        sender,
+    describe('sendMessage', () => {
+      it('should sendMessage throw error', async () => {
+        const error = new Error(`user not found`);
+        const createChat: SendMessageDto = new SendMessageDto();
+        Object.assign(createChat, {
+          ...TestCase.positive.create.input,
+          sender,
+        });
+        jest.spyOn(mockUserService, 'findOne').mockRejectedValueOnce(error);
+
+        try {
+          await chatService.sendMessage(createChat, sender);
+        } catch (err) {
+          expect(mockUserService.findOne).toHaveBeenCalledTimes(1);
+          expect(err).toBeInstanceOf(Error);
+          expect(err).toEqual(error);
+        }
       });
-      jest.spyOn(mockUserService, 'findOne').mockRejectedValueOnce(error);
-
-      try {
-        await chatService.sendMessage(createChat, sender);
-      } catch (err) {
-        expect(mockUserService.findOne).toHaveBeenCalledTimes(1);
-        expect(err).toBeInstanceOf(Error);
-        expect(err).toEqual(error);
-      }
     });
-  });
 
-  describe('findChatForSendingMessage', () => {
-    it('should findChatForSendingMessage throw error', async () => {
-      const error = new Error(`user not found`);
-      jest.spyOn(MockedChatModel, 'findOne').mockRejectedValueOnce(error);
+    describe('findChatForSendingMessage', () => {
+      it('should findChatForSendingMessage throw error', async () => {
+        const error = new Error(`user not found`);
+        jest.spyOn(MockedChatModel, 'findOne').mockRejectedValueOnce(error);
 
-      try {
-        await chatService.findChatForSendingMessage(sender, sender);
-      } catch (err) {
-        expect(MockedChatModel.findOne).toHaveBeenCalledTimes(1);
-        expect(err).toBeInstanceOf(Error);
-        expect(err).toEqual(error);
-      }
+        try {
+          await chatService.findChatForSendingMessage(sender, sender);
+        } catch (err) {
+          expect(MockedChatModel.findOne).toHaveBeenCalledTimes(1);
+          expect(err).toBeInstanceOf(Error);
+          expect(err).toEqual(error);
+        }
+      });
     });
   });
 });
