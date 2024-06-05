@@ -45,7 +45,7 @@ export class ChatGateway
   private readonly logger = new Logger(ChatGateway.name);
 
   @WebSocketServer()
-  private readonly server: Server;
+  public server: Server;
 
   constructor(
     private readonly jwtService: JwtService,
